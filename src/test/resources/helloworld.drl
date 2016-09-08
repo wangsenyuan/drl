@@ -1,0 +1,28 @@
+package helloworld;
+import com.me.drl.demo.sale.model.Sale;
+import com.me.drl.demo.sale.model.Customer
+import com.me.drl.demo.sale.model.CustomerType
+
+rule "Apply 50% discount to VIP customers"
+when
+    $s: Sale( customer.type == CustomerType.VIP )
+then
+    $s.setDiscount(0.50);
+    System.out.println("VIP discount applied");
+end
+
+rule "Apply no discount to Regular customers but approves the Sale"
+when
+    $s: Sale( customer.type != CustomerType.BAD )
+then
+    $s.setApproved(true);
+    System.out.println("Sale approved");
+end
+
+rule "Deny sales to BAD customers"
+when
+    $s: Sale( customer.type == CustomerType.BAD )
+then
+    $s.setApproved(false);
+    System.out.println("BAD customer. Sale denied");
+end

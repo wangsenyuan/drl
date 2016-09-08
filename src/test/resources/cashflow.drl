@@ -1,0 +1,28 @@
+package cashflow
+
+import com.me.drl.demo.cashflow.model.Account
+import com.me.drl.demo.cashflow.model.AccountPeriod
+import com.me.drl.demo.cashflow.model.CashFlow
+
+rule "increase balance for credits"
+dialect "mvel"
+when 
+	$ap : AccountPeriod(  )
+	$acc : Account( $accountNo :  accountNo )
+	CashFlow( type == 1, accountNo == $accountNo, date >= $ap.start && <= $ap.end, $amount: amount )
+then
+	$acc.balance += $amount;
+	System.out.println("account balance credit.");
+end
+
+
+rule "decrease balance for credits"
+dialect "mvel"
+when 
+	$ap : AccountPeriod(  )
+	$acc : Account( $accountNo :  accountNo )
+	CashFlow( type == 2, accountNo == $accountNo, date >= $ap.start && <= $ap.end, $amount: amount )
+then
+	$acc.balance = $acc.balance - $amount;
+	System.out.println("account balance deposit.");
+end

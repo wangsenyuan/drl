@@ -1,0 +1,10 @@
+package caculator
+
+import com.me.drl.demo.caculator.model.Operands
+
+rule "sum the operands up"
+when 
+	$ops: Operands(  )
+then
+	$ops.sum();
+end

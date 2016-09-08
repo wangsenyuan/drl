@@ -1,0 +1,50 @@
+package houserules
+
+import com.me.drl.demo.fire.model.Fire
+import com.me.drl.demo.fire.model.Sprinkler
+import com.me.drl.demo.fire.model.House
+import com.me.drl.demo.fire.model.Room
+import com.me.drl.demo.fire.model.Alarm
+
+
+rule "When there is a fire turn on the sprinkler"
+when
+    $house : House(  )
+    Fire( $room : room)
+    $sprinkler : Sprinkler( room == $room, on == false  )
+then
+    modify( $sprinkler ) { turnOn(); };
+    System.out.println("Sprinkler turned on");
+end
+
+rule "When the fire is gone turn off the sprinkler"
+when
+    $house : House(  )
+    $room : Room( )
+    $sprinkler : Sprinkler( room == $room, on == true )
+    not Fire( room == $room )
+then
+    modify( $sprinkler ) { turnOff(); };
+    System.out.println("Sprinkler turned off");
+end
+
+rule "Raise the alarm when we have one or more fires"
+when
+    $house: House(  )
+    exists Fire()
+then
+    insert( new Alarm() );
+    $house.setAlarmOn(true);
+    System.out.println("Alarm fired");
+end
+
+rule "Cancel the alarm when all the fires have gone"
+when
+    $house: House(  )
+    not Fire()
+    $alarm : Alarm()
+then
+    delete( $alarm );
+    $house.setAlarmOn(false);
+    System.out.println("Alarm disabed");
+end
