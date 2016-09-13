@@ -1,0 +1,22 @@
+package buspass
+
+import com.me.drl.demo.buspass.model.Person
+import com.me.drl.demo.buspass.model.IsAdult
+import com.me.drl.demo.buspass.model.IsChild
+
+rule "Infer Child" 
+when    
+	$p : Person( age < 16 )
+then    
+	insertLogical( new IsChild( $p ));
+	System.out.println("isChild inserted");
+end
+
+rule "Infer Adult"
+when    
+	$p : Person( age >= 16 )
+then    
+	insertLogical( new IsAdult( $p ));
+	System.out.println("IsAdult inserted");
+	
+end
