@@ -2,15 +2,23 @@ package com.me.drl.demo.buspass;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.api.KieServices;
+import org.kie.api.event.rule.AfterMatchFiredEvent;
+import org.kie.api.event.rule.DebugAgendaEventListener;
+import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
+import org.kie.api.event.rule.DefaultAgendaEventListener;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.ObjectFilter;
 import org.kie.api.runtime.rule.FactHandle;
+import org.kie.api.runtime.rule.Row;
+import org.kie.api.runtime.rule.ViewChangedEventListener;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 
 import com.me.drl.demo.buspass.model.IsAdult;
@@ -43,6 +51,8 @@ public class BusPassTest {
 
 	@Test
 	public void testGrowth() {
+		kieSession.addEventListener(new DebugAgendaEventListener());
+		kieSession.addEventListener(new DebugRuleRuntimeEventListener());
 		Person jim = new Person();
 		jim.setName("jim");
 		jim.setAge(15);
@@ -71,4 +81,6 @@ public class BusPassTest {
 		Collection<IsAdult> adultFacts = findFacts(kieSession, IsAdult.class);
 		assertTrue(adultFacts.size() > 0);
 	}
+
+	
 }

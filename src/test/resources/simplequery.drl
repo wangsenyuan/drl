@@ -1,0 +1,12 @@
+package simplequery
+
+query Q (Integer i) 
+	String( this == i.toString() )
+end
+
+rule R @Propagation(IMMEDIATE) when
+    $i : Integer()
+	?Q( $i; ) 
+then
+    System.out.println( $i );
+end
