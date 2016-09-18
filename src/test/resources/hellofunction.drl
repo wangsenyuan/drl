@@ -1,0 +1,12 @@
+package hellofunction
+
+function String hello(String name) {
+	return "hello, " + name;
+}
+
+rule "test function"
+when 
+	$s: String()
+then
+	System.out.println( hello($s) );
+end

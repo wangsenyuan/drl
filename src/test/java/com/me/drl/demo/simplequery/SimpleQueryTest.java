@@ -17,17 +17,19 @@ public class SimpleQueryTest {
 		kieSession = kContainer.newKieSession();
 	}
 
-	@Test
-	public void testSimpleQuery1() {
-		kieSession.insert(1);
-		kieSession.insert("1");
-		kieSession.fireAllRules();
-	}
-	
+//	@Test
+//	public void testSimpleQuery1() {
+//		kieSession.insert(1);
+//		kieSession.insert("1");
+//		kieSession.fireAllRules();
+//	}
+//	
 	@Test
 	public void testSimpleQuery2() {
 		kieSession.insert("1");
 		kieSession.insert(1);
 		kieSession.fireAllRules();
+		kieSession.dispose();
 	}
+
 }

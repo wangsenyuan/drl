@@ -1,0 +1,21 @@
+package allowance
+
+import com.me.drl.demo.allowance.Standard
+import com.me.drl.demo.allowance.TravelDetail
+import com.me.drl.demo.allowance.Result
+import java.math.BigDecimal
+
+
+function BigDecimal calculate(Standard s, TravelDetail t) {
+	return s.getDailyAmount().multiply(new BigDecimal(t.getDays()));
+}
+
+rule "travel detail need to caculate allowance"
+dialect "mvel"
+when
+	$s: Standard()
+	$t: TravelDetail()
+then
+	insert(new Result($s, $t, calculate($s, $t)));
+	System.out.println("simple allowance calculated");
+end
