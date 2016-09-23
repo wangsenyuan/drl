@@ -1,0 +1,32 @@
+package propertychange
+
+import com.me.drl.demo.propertychange.Person
+import com.me.drl.demo.propertychange.Car
+
+
+rule "when person owns a car, greeting him/her"
+dialect "mvel"
+when 
+	$p: Person()
+	Car(owner == $p.name)
+then
+	System.out.println("!!!!congratulations " + $p.name);
+end
+
+rule "when person owns a car, greeting him/her, with name property"
+dialect "mvel"
+when 
+	Person($name: name)
+	Car(owner == $name)
+then
+	System.out.println("congratulations " + $name);
+end
+
+rule "change tom to jim"
+dialect "mvel"
+when
+	$p: Person(name == 'tom')
+then
+	modify($p) {setName("jim")}
+	System.out.println("change tom to jim");
+end

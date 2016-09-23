@@ -1,0 +1,14 @@
+package fromcollection
+
+import com.me.drl.demo.fromcollection.Order
+import com.me.drl.demo.fromcollection.Item
+
+rule "discount 20% on qunatity > 100"
+dialect "mvel"
+when
+	$order: Order()
+	$item: Item(quantity > 100) from $order.items
+then
+	System.out.println("discount " + $item.price + ", as quantity = " + $item.quantity);
+	$item.discount(0.8);
+end

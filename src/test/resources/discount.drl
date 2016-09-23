@@ -1,0 +1,30 @@
+package discount
+
+import com.me.drl.demo.discount.Customer
+import com.me.drl.demo.discount.Car
+
+rule "give discount and freeparking to old ones"
+no-loop true
+when 
+	$customer: Customer(age > 60, $name: name)
+	if (type == "golden") 
+		do[giveDiscount10]
+	else if (type == "silver") 
+		break[giveDiscount5]
+	$car: Car(owner == $name)
+then
+	modify($car) {
+		setFreeParking(true);
+	}
+	System.out.println("free parking");
+then[giveDiscount10]
+	modify($customer) {
+		setDiscount(10);
+	}
+	System.out.println("discount 10");
+then[giveDiscount5]
+	modify($customer) {
+		setDiscount(5);
+	}
+	System.out.println("discount 5");
+end

@@ -1,21 +1,40 @@
 package allowance
 
-import com.me.drl.demo.allowance.Standard
 import com.me.drl.demo.allowance.TravelDetail
-import com.me.drl.demo.allowance.Result
+import com.me.drl.demo.allowance.Standard
+import com.me.drl.demo.allowance.TotalAllowance
 import java.math.BigDecimal
+import org.joda.time.DateTime;
 
-
-function BigDecimal calculate(Standard s, TravelDetail t) {
-	return s.getDailyAmount().multiply(new BigDecimal(t.getDays()));
-}
-
-rule "travel detail need to caculate allowance"
-dialect "mvel"
+rule "init total allowance"
 when
-	$s: Standard()
-	$t: TravelDetail()
 then
-	insert(new Result($s, $t, calculate($s, $t)));
-	System.out.println("simple allowance calculated");
+	insert(new TotalAllowance());
+end
+
+rule "daily allowance with weekend standard on weekend"
+dialect "mvel"
+no-loop true
+when
+	$total: TotalAllowance()
+	$td: TravelDetail()
+	$es: Standard(weekend == true, unify == false)
+	$res: Double() from accumulate (
+		DateTime($dw: getDayOfWeek()) from $td.days,
+		init(Double $s = 0;),
+		action(
+			if($dw < 6) {
+				$s += $es.standardAmount;
+			} else {
+				$s += $es.exceptionAmount;
+			}
+		),
+		result($s)
+	)
+then
+	modify($total) {
+		setTotal($res),
+		setAllowance($res - $td.amount.doubleValue())
+	}
+	System.out.println("lalala");
 end
